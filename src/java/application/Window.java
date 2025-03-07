@@ -5,12 +5,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+
 import javax.swing.JFrame;
 
 
 public class Window extends JFrame
 {
     private Container pane;
+    private GraphViewPort GVP;
 
     public Window()
     {
@@ -23,10 +25,13 @@ public class Window extends JFrame
 
         pane.setLayout(new FlowLayout());
         pane.setBackground(new Color(20,22,25));
-        //Canvas canvas = new Canvas();
 
+        GVP = new GraphViewPort(dimension);
+        GVP.setSize(dimension);
+        pane.add(GVP);
 
     }
+
 
     public void run()
     {
