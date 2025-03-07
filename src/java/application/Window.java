@@ -1,6 +1,5 @@
 package src.java.application;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -24,9 +23,9 @@ public class Window extends JFrame
 
         pane.setLayout(new FlowLayout());
         pane.setBackground(new Color(20,22,25));
-        Canvas canvas = new Canvas();
+        //Canvas canvas = new Canvas();
 
-        
+
     }
 
     public void run()
@@ -43,5 +42,5 @@ public class Window extends JFrame
         });
 
     }
-    
+
 }

@@ -4,7 +4,7 @@ package src.tests;
 import src.java.automaton.CalculationBuilder;
 import src.java.automaton.datatree.Node;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -295,20 +295,6 @@ public class CalculationBuilderTests
     }
 
 
-        //"(-2*3)^2+3*3"; -> causes error.
-    /*@Test
-    public void performance_testing()
-    {
-        //2.3s
-        func = "3^4+3*3";
-        tree = CalculationBuilder.build(func);
-        for(int i = 0; i < 20000; i++)
-        {
-            value = tree.get(-20.8);
-        }
-        System.out.println(value);
-        assertTrue(value == 90.0);
-
-    }*/
+        //TODO: "(-2*3)^2+3*3"; -> causes error.
 
 }

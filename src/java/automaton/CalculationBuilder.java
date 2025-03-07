@@ -1,7 +1,5 @@
 package src.java.automaton;
 
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import src.java.automaton.datatree.Calculation;
 import src.java.automaton.datatree.Node;
@@ -16,11 +14,7 @@ public final class CalculationBuilder
 
     /// Dictionaries used within functions
     private static final char[] arr_numbers = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    private static final char[] arr_multiplication_operators = new char[] {'*', '/'};
-    private static final char[] arr_addition_operators = new char[] {'+', '-'};
-    private static final char[] arr_power_operators = new char[] {'^', '\\'};
 
-    private static final char[] arr_misc = new char[] {'(', ')'};
     private static final char[] arr_number_decimal_symbols = new char[] {',', '.'};
 
 
@@ -96,7 +90,7 @@ public final class CalculationBuilder
      */
     private static Optional<Node> divide_by_operators(final char[] chars, int begin, int end, CalculationType[] arr_types, int binding_strength)
     {
-        System.out.println("building function:" + chars + " [begin: " + begin + ", end: " + end + "]");
+        System.out.println("building function:" + chars.toString() + " [begin: " + begin + ", end: " + end + "]");
         Node a, b;
         CalculationType type;
         ///

@@ -2,8 +2,8 @@ package src.java.functions;
 public class Point
 {
 
-    public double x;
-    public double y;
+    protected double x;
+    protected double y;
 
 
     private Point(double x, double y)
@@ -12,7 +12,7 @@ public class Point
     }
 
 
-    public Point of(double x, double y)
+    public static Point of(double x, double y)
     {
         return new Point(x, y);
     }

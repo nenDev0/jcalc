@@ -6,9 +6,8 @@ import src.java.automaton.datatree.Node;
 import src.java.automaton.datatree.Value;
 import src.java.automaton.datatree.CalculationType;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class CalculationTests
