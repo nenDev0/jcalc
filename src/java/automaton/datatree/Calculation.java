@@ -18,7 +18,6 @@ public class Calculation implements Node
         {
             throw new NullPointerException("CalculationType cannot be null!");
         }
-
         this.a = a;
         this.b = b;
         this.type = type;
@@ -82,6 +81,8 @@ public class Calculation implements Node
     @Override
     public void cut_reduntant_calculations()
     {
+        /// We check for instances of Calculations, because else we would be replacing each Value instance with
+        /// a new Value instance, which just creates unnecessary work for the GC.
         if (a instanceof Calculation)
         {
             /// a contains X -> search for possible cuts recursively (DFS) down the tree
@@ -96,6 +97,8 @@ public class Calculation implements Node
                 a = Value.of(a.get(0));
             }
         }
+        /// We check for instances of Calculations, because else we would be replacing each Value instance with
+        /// a new Value instance, which just creates unnecessary work for the GC.
         if (b instanceof Calculation)
         {
             /// b contains X -> search for possible cuts recursively (DFS) down the tree

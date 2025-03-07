@@ -25,7 +25,7 @@ public class Graph
         double x_end =  center.x - width/2;
         double y_min = center.y - height/2;
         double y_max = center.y + height/2;
-
+        ///
         /// TODO: there needs to be some sort of overlap.
         /// Currently around the edges the graph would simply stop, very noticable at lower precision.
         double diff_x = width/precision;

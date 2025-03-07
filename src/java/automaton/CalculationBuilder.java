@@ -18,8 +18,7 @@ public final class CalculationBuilder
     private static final char[] arr_number_decimal_symbols = new char[] {',', '.'};
 
 
-    private CalculationBuilder() {
-    }
+    private CalculationBuilder() {}
 
 
     /**
@@ -42,9 +41,15 @@ public final class CalculationBuilder
         node.cut_reduntant_calculations();
         return node;
     }
+
+
     /**
      * Method for internal recursive usage of the build function.
      * Allows setting intervals to which the function obliges.
+     * Iterates through all binding-strengths and calls for the interval to be divided by
+     * operators of those bindings-strengths. If this occurs successfully, returns node.
+     *
+     * Handles occurrences of the x-parameter.
      *
      * @param chars
      * @param begin
@@ -95,7 +100,7 @@ public final class CalculationBuilder
         CalculationType type;
         ///
         /// Reads through every character in the interval set by begin & end parameters.
-        for (int i = begin; /*i < chars.length &&*/ i < end; i++)
+        for (int i = begin; i < end; i++)
         {
             /// Separate bracket into a new Calculation and call the build method accordingly.
             if (chars[i] == '(')
@@ -141,56 +146,55 @@ public final class CalculationBuilder
                     return Optional.of(build(chars, i + 1, closing_bracket));
                 }
             }
-            else
+            ///
+            /// Test char at index for operators with the binding_strength currently set
+            for (CalculationType it_type : arr_types)
             {
-                for (CalculationType it_type : arr_types)
+                if (chars[i] == CalculationType.get_char(it_type))
                 {
-                    if (chars[i] == CalculationType.get_char(it_type))
+                    if (binding_strength == 2)
                     {
-                        if (binding_strength == 2)
+                        /// ensure +/- at the beginning of values aren't cut off
+                        /// example (-2) would otherwise be cut into "" and "2"
+                        if(i == begin)
                         {
-                            /// ensure +/- at the beginning of values aren't cut off
-                            /// example (-2) would otherwise be cut into "" and "2"
-                            if(i == begin)
+                            continue;
+                        }
+                        ///TODO SUBTRACTION-METHOD this is an ugly solution. Find a better one?
+                        ///
+                        /// We ensure here, that when a negative value is added with a positive value
+                        /// ..-3+2.. that they don't add up, but a subtracts from b.
+                        /// We currently do this by testing, whether the number a has a sign in front of it
+                        /// and for b we ensure that, if we sign it, it has to start with a number.
+                        /// Otherwise we do b like normal.
+                        try
+                        {
+                            if (read_operator(chars[begin-1]) == CalculationType.SUBTRACTION)
                             {
-                                continue;
-                            }
-                            ///TODO SUBTRACTION-METHOD this is an ugly solution. Find a better one?
-                            ///
-                            /// We ensure here, that when a negative value is added with a positive value
-                            /// ..-3+2.. that they don't add up, but a subtracts from b.
-                            /// We currently do this by testing, whether the number a has a sign in front of it
-                            /// and for b we ensure that, if we sign it, it has to start with a number.
-                            /// Otherwise we do b like normal.
-                            try
-                            {
-                                if (read_operator(chars[begin-1]) == CalculationType.SUBTRACTION)
-                                {
-                                    a = build(chars, begin-1, i);
-                                }
-                                else
-                                {
-                                    a = build(chars, begin, i);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                a = build(chars, begin, i);
-                            }
-                            if (-1 == char_is_number(chars[i+1]))
-                            {
-                                b = build(chars, i + 1, end);
+                                a = build(chars, begin-1, i);
                             }
                             else
                             {
-                                b = build(chars, i, end);
+                                a = build(chars, begin, i);
                             }
-                            return Optional.of(Calculation.of(a, b, CalculationType.ADDITION));
                         }
-                        a = build(chars, begin, i);
-                        b = build(chars, i + 1, end);
-                        return Optional.of(Calculation.of(a, b, it_type));
+                        catch (Exception e)
+                        {
+                            a = build(chars, begin, i);
+                        }
+                        if (-1 == char_is_number(chars[i+1]))
+                        {
+                            b = build(chars, i + 1, end);
+                        }
+                        else
+                        {
+                            b = build(chars, i, end);
+                        }
+                        return Optional.of(Calculation.of(a, b, CalculationType.ADDITION));
                     }
+                    a = build(chars, begin, i);
+                    b = build(chars, i + 1, end);
+                    return Optional.of(Calculation.of(a, b, it_type));
                 }
             }
         }
@@ -252,7 +256,6 @@ public final class CalculationBuilder
         {
             begin++;
         }
-
         for (int i = begin; i < end; i++)
         {
             int n = char_is_number(chars[i]);

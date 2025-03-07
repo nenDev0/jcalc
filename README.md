@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a rewrite of pycalc in Java. The intention is to remove all bugs previously existant in pycalc, make it
+This project is a conceptual rewrite of pycalc in Java. The intention is to remove all bugs previously existent in pycalc, make it
 more efficient and add more features. Be aware, it is a massive work in progress..
 
 ## Project
