@@ -158,4 +158,73 @@ public class CalculationTests
         assertTrue(c.get(xv) == Math.pow(xv, xv));
     }
 
+
+    @Test
+    public void contains_X()
+    {
+        for (CalculationType type : CalculationType.values())
+        {
+
+            change_values(12.0, 13.0, 3.0);
+
+            c = Calculation.of(a, b, type);
+            assertTrue(!c.contains_X());
+
+            change_values(12.0, 13.0, 3.0);
+            a = Value.X_VALUE;
+            c = Calculation.of(a, b, type);
+            assertTrue(c.contains_X());
+
+
+            change_values(12.0, 13.0, 3.0);
+            b = Value.X_VALUE;
+            c = Calculation.of(a, b, type);
+            assertTrue(c.contains_X());
+
+            change_values(12.0, 13.0, 3.0);
+            b = Value.X_VALUE;
+            a = Value.X_VALUE;
+            c = Calculation.of(a, b, type);
+            assertTrue(c.contains_X());
+        }
+    }
+
+
+    @Test
+    public void contains_X_depth_II()
+    {
+        for (CalculationType type : CalculationType.values())
+        {
+
+            change_values(12.0, 13.0, 3.0);
+
+            c = Calculation.of(Calculation.of(a, Value.of(0), type), Calculation.of(Value.of(0), b, type), type);
+            assertTrue(!c.contains_X());
+
+            change_values(12.0, 13.0, 3.0);
+            a = Value.X_VALUE;
+            c = Calculation.of(Calculation.of(a, Value.of(0), type), Calculation.of(Value.of(0), b, type), type);
+            assertTrue(c.contains_X());
+
+
+            change_values(12.0, 13.0, 3.0);
+            b = Value.X_VALUE;
+            c = Calculation.of(Calculation.of(a, Value.of(0), type), Calculation.of(Value.of(0), b, type), type);
+            assertTrue(c.contains_X());
+
+            change_values(12.0, 13.0, 3.0);
+            b = Value.X_VALUE;
+            a = Value.X_VALUE;
+            c = Calculation.of(Calculation.of(a, Value.of(0), type), Calculation.of(Value.of(0), b, type), type);
+            assertTrue(c.contains_X());
+        }
+    }
+
+
+    @Test
+    public void cut_redundant_nodes()
+    {
+        ///TODO this requires some sort of accessibility functionality
+
+    }
 }

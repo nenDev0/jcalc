@@ -1,5 +1,7 @@
 package src.java.automaton.datatree;
 
+
+
 public enum CalculationType
 {
 
@@ -16,7 +18,8 @@ public enum CalculationType
      * If two values are the same, their binding order makes no difference.
      *
      * @param type
-     * @return
+     *
+     * @return int according to the binding strength of the CalculationType parameter
      */
     public static int binding_strength(CalculationType type)
     {
@@ -39,6 +42,15 @@ public enum CalculationType
     }
 
 
+    /**
+     * Returns the character assigned to the CalculationType parameter.
+     *
+     * @param type
+     * @throws AssertionError if there is no case for the given Type
+     * (in this case CalculationType must be null)
+     *
+     * @return char {+,-,*,/,^}
+     */
     public static char get_char(CalculationType type)
     {
         switch (type)

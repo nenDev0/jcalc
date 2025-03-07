@@ -1,5 +1,7 @@
 package src.java.functions;
-public class Point
+
+
+public class Point implements Comparable<Point>
 {
 
     protected double x;
@@ -39,5 +41,35 @@ public class Point
         }
         this.x = x;
         this.y = y;
+    }
+
+    public double get_x()
+    {
+        return x;
+    }
+
+    public double get_y()
+    {
+        return y;
+    }
+
+
+    @Override
+    public int compareTo(Point point)
+    {
+        if (x > point.get_x())
+        {
+            return 1;
+        }
+        if (x < point.get_x())
+        {
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Point{ "+x + ", "+y+" }";
     }
 }

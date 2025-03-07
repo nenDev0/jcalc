@@ -261,6 +261,19 @@ public class CalculationBuilderTests
         }
     }
 
+    @Test
+    public void negative_x()
+    {
+        func = "-x";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        for(double x = -20.0; x < 20.0; x=x+0.5)
+        {
+            value = tree.get(x);
+            System.out.println(value);
+            assertTrue(value == -x);
+        }
+    }
 
     @Test
     public void contains_x_values()
@@ -354,6 +367,14 @@ public class CalculationBuilderTests
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == 27.0);
+
+        //TODO negative sign is calculated with the bracket, before it is squared.
+        func = "-(x-25)^2+14";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == -770.0);
     }
 
 
@@ -366,7 +387,6 @@ public class CalculationBuilderTests
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == Math.pow(-3.0, 2.0));
-
     }
 
 }

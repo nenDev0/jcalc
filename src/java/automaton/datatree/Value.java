@@ -49,7 +49,7 @@ public class Value implements Node
 
     public double get(double X)
     {
-        if (X_VALUE.equals(this))
+        if (contains_X())
         {
             return X;
         }

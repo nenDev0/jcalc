@@ -16,7 +16,6 @@ public final class CalculationBuilder
     private static final char[] arr_numbers = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     private static final char[] arr_number_decimal_symbols = new char[] {',', '.'};
-    private static final char[] arr_sign = new char[] {'+', '-'};
 
 
     private CalculationBuilder() {}
@@ -61,6 +60,7 @@ public final class CalculationBuilder
      */
     private static Node build(final char[] chars, int begin, int end)
     {
+        System.out.println("building function:" + chars.toString() + " [begin: " + begin + ", end: " + end + "]");
         Optional<Node> node;
         for (int j = CalculationType.binding_strength_count() - 1; j >= 0; j--)
         {
@@ -69,6 +69,25 @@ public final class CalculationBuilder
             {
                 return node.get();
             }
+        }
+        int sign = char_is_sign(chars[begin]);
+        if (sign == 1)
+        {
+            if (chars[begin+1] == 'x')
+            {
+                System.out.println("encountered x at: " +begin);
+                return Value.X_VALUE;
+            }
+            return Value.of(decode_number(chars, begin + 1, end));
+        }
+        if (sign == -1)
+        {
+            if (chars[begin+1] == 'x')
+            {
+                System.out.println("encountered x at: " +begin);
+                return Calculation.of(Value.X_VALUE, Value.of(-1), CalculationType.MULTIPLICATION);
+            }
+            return Value.of(-decode_number(chars, begin + 1, end));
         }
         if (chars[begin] == 'x')
         {
@@ -96,7 +115,6 @@ public final class CalculationBuilder
      */
     private static Optional<Node> divide_by_operators(final char[] chars, int begin, int end, CalculationType[] arr_types, int binding_strength)
     {
-        System.out.println("building function:" + chars.toString() + " [begin: " + begin + ", end: " + end + "]");
         if (chars[begin] == '(')
         {
             if (find_end_bracket(chars, begin + 1, end) == end - 1)
@@ -115,10 +133,10 @@ public final class CalculationBuilder
         {
             if (chars[begin + 1] == '(')
             {
-                iteration_begin = find_end_bracket(chars, begin + 1, end);
+                iteration_begin = find_end_bracket(chars, begin + 2, end);
                 if (iteration_begin == end - 1)
                 {
-                    return Optional.of(Calculation.of(build(chars, begin + 1, end - 1), Value.of(-1), CalculationType.MULTIPLICATION));
+                    return Optional.of(Calculation.of(build(chars, begin + 2, end - 1), Value.of(-1), CalculationType.MULTIPLICATION));
                 }
             }
         }
@@ -126,10 +144,10 @@ public final class CalculationBuilder
         {
             if (chars[begin + 1] == '(')
             {
-                iteration_begin = find_end_bracket(chars, begin + 1, end);
+                iteration_begin = find_end_bracket(chars, begin + 2, end);
                 if (iteration_begin == end - 1)
                 {
-                    return Optional.of(build(chars, begin + 1, end - 1));
+                    return Optional.of(build(chars, begin + 2, end - 1));
                 }
             }
 
@@ -246,15 +264,6 @@ public final class CalculationBuilder
         double c_out = 0.0;
         int number_of_decimal_points = 0;
         boolean has_decimal_points = false;
-        int sign = char_is_sign(chars[begin]);
-        if (sign == -1)
-        {
-            begin++;
-        }
-        else if (sign == 1)
-        {
-            begin++;
-        }
         /// else if sign == 0, do nothing (char_0 may be a number)
         for (int i = begin; i < end; i++)
         {
@@ -279,10 +288,6 @@ public final class CalculationBuilder
         if (has_decimal_points)
         {
             c_out = c_out / Math.pow(10, number_of_decimal_points);
-        }
-        if (sign == -1)
-        {
-            c_out = -c_out;
         }
         return c_out;
     }
@@ -350,6 +355,13 @@ public final class CalculationBuilder
         return 0;
     }
 
+
+    /**
+     *
+     *
+     * @param c
+     * @return
+     */
     private static CalculationType read_operator(char c)
     {
         switch (c) {
