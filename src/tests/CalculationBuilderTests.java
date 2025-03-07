@@ -295,6 +295,21 @@ public class CalculationBuilderTests
     }
 
 
-        //TODO: "(-2*3)^2+3*3"; -> causes error.
+    @Test
+    public void more_functions()
+    {
+        func = "(-2*3)*2+3*3";
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == -3.0);
+
+        func = "(-2*3)^2+3*3";
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == -45.0);
+
+    }
 
 }

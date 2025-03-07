@@ -42,7 +42,6 @@ public class CalculationTests
         assertTrue(c.get(xv) == av / bv);
         c = Calculation.of(a, b, CalculationType.POWER);
         assertTrue(c.get(xv) == Math.pow(av, bv));
-
     }
 
     @Test
@@ -58,10 +57,9 @@ public class CalculationTests
         assertTrue(c.get(xv) == av * bv);
         c = Calculation.of(a, b, CalculationType.DIVISION);
         assertTrue(c.get(xv) == av / bv);
-        /// TODO negative values in powers don't work?!
+        change_values(-13.0, 3.0, 9.0);
         c = Calculation.of(a, b, CalculationType.POWER);
-        //assertTrue(c.get(xv) == Math.pow(av, bv));
-
+        assertTrue(c.get(xv) == Math.pow(av, bv));
     }
 
 
@@ -97,12 +95,9 @@ public class CalculationTests
         assertTrue(c.get(xv) == av * bv);
         c = Calculation.of(a, b, CalculationType.DIVISION);
         assertTrue(c.get(xv) == av / bv);
-        /// TODO negative values in powers don't work?!
+        change_values(-1.9, -5.00, 9.0);
         c = Calculation.of(a, b, CalculationType.POWER);
-        //assertTrue(c.get(xv) == Math.pow(av, bv));
-
-
-
+        assertTrue(c.get(xv) == Math.pow(av, bv));
     }
 
 
@@ -122,7 +117,6 @@ public class CalculationTests
         assertTrue(c.get(xv) == xv / bv);
         c = Calculation.of(a, b, CalculationType.POWER);
         assertTrue(c.get(xv) == Math.pow(xv, bv));
-
     }
 
 
