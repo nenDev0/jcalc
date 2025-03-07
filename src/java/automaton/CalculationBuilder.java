@@ -16,6 +16,7 @@ public final class CalculationBuilder
     private static final char[] arr_numbers = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     private static final char[] arr_number_decimal_symbols = new char[] {',', '.'};
+    private static final char[] arr_sign = new char[] {'+', '-'};
 
 
     private CalculationBuilder() {}
@@ -96,56 +97,55 @@ public final class CalculationBuilder
     private static Optional<Node> divide_by_operators(final char[] chars, int begin, int end, CalculationType[] arr_types, int binding_strength)
     {
         System.out.println("building function:" + chars.toString() + " [begin: " + begin + ", end: " + end + "]");
-        Node a, b;
-        CalculationType type;
-        ///
-        /// Reads through every character in the interval set by begin & end parameters.
-        for (int i = begin; i < end; i++)
+        if (chars[begin] == '(')
         {
-            /// Separate bracket into a new Calculation and call the build method accordingly.
-            if (chars[i] == '(')
+            if (find_end_bracket(chars, begin + 1, end) == end - 1)
             {
                 System.out.println("brackets were found...");
-                int closing_bracket = find_end_bracket(chars, i + 1, end);
-                if (begin < i && closing_bracket < end - 1)
+                return Optional.of(build(chars, begin + 1, end - 1));
+            }
+        }
+        /// used to skip, in case a bracket is found early on
+        int iteration_begin = begin;
+        ///
+        /// Test if first symbol is a sign.
+        /// This is necessary for the case -(2+3), as this way (2+3) is correctly understood as a bracket.
+        int sign = char_is_sign(chars[begin]);
+        if (sign == -1)
+        {
+            if (chars[begin + 1] == '(')
+            {
+                iteration_begin = find_end_bracket(chars, begin + 1, end);
+                if (iteration_begin == end - 1)
                 {
-                    ///compare binding-strength of the operators on both sides
-                    ///TODO read_operator may fail, if brackets are found instead. Example: ((a+b))
-                    /// Does this apply?
-                    CalculationType type_left = read_operator(chars[i-1]);
-                    CalculationType type_right = read_operator(chars[closing_bracket+1]);
-                    a = build(chars, begin, i - 1);
-                    b = build(chars, i + 1, closing_bracket);
-                    Node c = build(chars, closing_bracket+2, end);
-                    if (CalculationType.binding_strength(type_left) < CalculationType.binding_strength(type_right))
-                    {
-                        return Optional.of(Calculation.of(Calculation.of(a, b, type_left), c, type_right));
-                    }
-                    else
-                    {
-                        return Optional.of(Calculation.of(a, Calculation.of(b, c, type_right), type_left));
-                    }
-                }
-                else if (begin < i)
-                {
-                    a = build(chars, begin, i - 1);
-                    b = build(chars, i + 1, end);
-                    int j = 1;
-                    type = read_operator(chars[i - j]);
-                    return Optional.of(Calculation.of(a, b, read_operator(chars[i - 1])));
-                }
-                else if (closing_bracket < end - 1)
-                {
-                    a = build(chars, i + 1, closing_bracket);
-                    b = build(chars, closing_bracket + 2, end);
-                    type = read_operator(chars[closing_bracket + 1]);
-                    return Optional.of(Calculation.of(a, b, type));
-                }
-                else
-                {
-                    return Optional.of(build(chars, i + 1, closing_bracket));
+                    return Optional.of(Calculation.of(build(chars, begin + 1, end - 1), Value.of(-1), CalculationType.MULTIPLICATION));
                 }
             }
+        }
+        else if (sign == 1)
+        {
+            if (chars[begin + 1] == '(')
+            {
+                iteration_begin = find_end_bracket(chars, begin + 1, end);
+                if (iteration_begin == end - 1)
+                {
+                    return Optional.of(build(chars, begin + 1, end - 1));
+                }
+            }
+
+        }
+        Node a, b;
+        ///
+        /// Reads through every character in the interval set by begin & end parameters.
+        for (int i = iteration_begin; i < end; i++)
+        {
+            /// Skip the bracket
+            if (chars[i] == '(')
+            {
+                i = find_end_bracket(chars, i + 1, end);
+                continue;
+            }
+            /// Separate bracket into a new Calculation and call the build method accordingly.
             ///
             /// Test char at index for operators with the binding_strength currently set
             for (CalculationType it_type : arr_types)
@@ -246,16 +246,16 @@ public final class CalculationBuilder
         double c_out = 0.0;
         int number_of_decimal_points = 0;
         boolean has_decimal_points = false;
-        boolean invert = false;
-        if (chars[begin] == '-')
-        {
-            invert=true;
-            begin++;
-        }
-        else if (chars[begin] == '+')
+        int sign = char_is_sign(chars[begin]);
+        if (sign == -1)
         {
             begin++;
         }
+        else if (sign == 1)
+        {
+            begin++;
+        }
+        /// else if sign == 0, do nothing (char_0 may be a number)
         for (int i = begin; i < end; i++)
         {
             int n = char_is_number(chars[i]);
@@ -280,7 +280,7 @@ public final class CalculationBuilder
         {
             c_out = c_out / Math.pow(10, number_of_decimal_points);
         }
-        if (invert)
+        if (sign == -1)
         {
             c_out = -c_out;
         }
@@ -327,6 +327,28 @@ public final class CalculationBuilder
         return false;
     }
 
+
+    /**
+     * Test, if the char given as parameter is a sign (+/-) symbol.
+     *
+     * @param c
+     * @return
+     * 1 - char is a positive sign '+'
+     * -1 - char is a negative sign '-'
+     * 0 - char is not a sign
+     */
+    private static int char_is_sign(char c)
+    {
+        if (c == '+')
+        {
+            return 1;
+        }
+        if(c == '-')
+        {
+            return -1;
+        }
+        return 0;
+    }
 
     private static CalculationType read_operator(char c)
     {

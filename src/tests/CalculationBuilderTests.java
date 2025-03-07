@@ -232,12 +232,14 @@ public class CalculationBuilderTests
         assertTrue(value == -11.0);
 
         func = "-2*3-3*3";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-20.8);
         System.out.println(value);
         assertTrue(value == -15.0);
 
         func = "-2*3+3*3";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-20.8);
         System.out.println(value);
@@ -249,6 +251,7 @@ public class CalculationBuilderTests
     public void x()
     {
         func = "x";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         for(double x = -20.0; x < 20.0; x=x+0.5)
         {
@@ -263,35 +266,54 @@ public class CalculationBuilderTests
     public void contains_x_values()
     {
         func = "x+12";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == 9.0);
 
         func = "12+x";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == 9.0);
 
         func = "3*x";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == -9.0);
 
         func = "3*x+6+x";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == -6.0);
 
         func = "x*x";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == Math.pow(-3.0, 2.0));
 
+
+        func = "x^x";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == Math.pow(-3.0, -3.0));
+
+        func = "x^x+3";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == Math.pow(-3.0, -3.0) + 3);
     }
 
 
@@ -299,16 +321,51 @@ public class CalculationBuilderTests
     public void more_functions()
     {
         func = "(-2*3)*2+3*3";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
         assertTrue(value == -3.0);
 
         func = "(-2*3)^2+3*3";
+        System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);
         System.out.println(value);
-        assertTrue(value == -45.0);
+        assertTrue(value == 45.0);
+
+        func = "3*3+(-2*3)^2";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == 45.0);
+
+        func = "-3*3+(-2*3)^2";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == 27.0);
+
+        func = "-3*3+(-2*3)^(2.5*2-3)";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == 27.0);
+    }
+
+
+    @Test
+    public void function_trimming()
+    {
+        func = " x * x ";
+        System.out.println("begin testing.:" + func);
+        tree = CalculationBuilder.build(func);
+        value = tree.get(-3.0);
+        System.out.println(value);
+        assertTrue(value == Math.pow(-3.0, 2.0));
 
     }
 
