@@ -2,20 +2,19 @@ package src.java.functions;
 
 import java.util.TreeSet;
 
-import src.java.automaton.CalculationBuilder;
-import src.java.automaton.datatree.Node;
+import src.java.automaton.Function;
 
 public class Graph implements Comparable<Graph>
 {
 
-    private Node top_node;
+    private Function function;
     private TreeSet<Point> set_points;
     private int ID;
 
     public Graph(String function, int ID)
     {
         this.ID = ID;
-        top_node = CalculationBuilder.build(function);
+        set_function(function);
         set_points = new TreeSet<Point>();
     }
 
@@ -25,9 +24,10 @@ public class Graph implements Comparable<Graph>
     }
 
 
-    public void set_function(String function)
+    public String set_function(String function)
     {
-        top_node = CalculationBuilder.build(function);
+        this.function = Function.of(function);
+        return function.toString();
     }
 
 
@@ -44,7 +44,7 @@ public class Graph implements Comparable<Graph>
         boolean last_point_accepted = false;
         for (double x = x_begin; x < x_end; x+=diff_x)
         {
-            double y = top_node.get(x);
+            double y = function.get(x);
             if (Double.isNaN(y))
             {
                 last_point_accepted = false;
@@ -57,7 +57,7 @@ public class Graph implements Comparable<Graph>
                 /// this ensures the edges aren't empty
                 if (last_point_accepted == false)
                 {
-                    double y_val = top_node.get(x-diff_x);
+                    double y_val = function.get(x-diff_x);
                     if (!Double.isNaN(y_val))
                     {
                         Point p = Point.of(x-diff_x, y_val);

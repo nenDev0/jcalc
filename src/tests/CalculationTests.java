@@ -225,6 +225,7 @@ public class CalculationTests
     public void cut_redundant_nodes()
     {
         ///TODO this requires some sort of accessibility functionality
-
     }
+
+
 }

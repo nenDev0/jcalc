@@ -67,12 +67,9 @@ public class GraphViewPort extends JPanel
 
     public void paint_graphs(Graphics g)
     {
-        for (Point[] arr_points : GraphRegister.get().get_values())
+        for (int[][] arr_values : GraphRegister.get().get_values())
         {
-            for(int i = 1; i< arr_points.length; i++)
-            {
-                g.drawLine(arr_points[i-1].x, arr_points[i-1].y, arr_points[i].x, arr_points[i].y);
-            }
+            g.drawPolyline(arr_values[0], arr_values[1], arr_values[1].length);
         }
     }
 
