@@ -1,7 +1,11 @@
 package src.java.application;
 
 import src.java.functions.Point;
+
+import java.util.Iterator;
 import java.util.TreeMap;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 import src.java.functions.Graph;
 
@@ -29,20 +33,61 @@ public class GraphRegister
 
     public void register_graph(Graph graph)
     {
-        System.out.println("added new graph:" + graph.get_ID());
         map_graphs_to_points.put(graph, calculate_points(graph));
+        System.out.println("added new graph:" + graph.get_ID());
     }
 
 
-    public void set_scale(int width, int height)
+    public void register_graph(String function, int id)
+    {
+        Graph graph = new Graph(function, id);
+        map_graphs_to_points.put(graph, calculate_points(graph));
+        System.out.println("added new graph:" + graph.get_ID());
+        update_window();
+    }
+
+
+    public void remove_graph(int id)
+    {
+        for (Iterator<Entry<Graph, java.awt.Point[]>> entry_it = map_graphs_to_points.entrySet().iterator();
+                entry_it.hasNext();)
+        {
+            Entry<Graph, java.awt.Point[]> entry = entry_it.next();
+            if (entry.getKey().get_ID() == id)
+            {
+                entry_it.remove();
+                break;
+            }
+        }
+    }
+
+    public Optional<Graph> get_graph(int id)
+    {
+        for (Graph graph : map_graphs_to_points.keySet())
+        {
+            if (graph.get_ID() == id)
+            {
+                return Optional.of(graph);
+            }
+        }
+        return Optional.empty();
+    }
+
+
+    public void set_dimension(int width, int height)
     {
         this.WIDTH = width;
         this.HEIGHT = height;
-        this.width_x = width/10;
-        this.height_y = height/10;
+        set_scale(1);
         calculate_points();
     }
 
+    public void set_scale(int scale)
+    {
+        this.width_x = WIDTH * scale / 100;
+        this.height_y = HEIGHT * scale / 100;
+        calculate_points();
+    }
 
     public void calculate_points()
     {
@@ -50,13 +95,26 @@ public class GraphRegister
         {
             map_graphs_to_points.put(graph, calculate_points(graph));
         }
+        update_window();
     }
 
+    public void calculate_points(int id)
+    {
+        for(Entry<Graph, java.awt.Point[]> entry : map_graphs_to_points.entrySet())
+        {
+            if (entry.getKey().get_ID() == id)
+            {
+                entry.setValue(calculate_points(entry.getKey()));
+                break;
+            }
+        }
+        update_window();
+    }
 
     private java.awt.Point[] calculate_points(Graph graph)
     {
         System.out.println("GraphRegister is calculating...");
-        graph.calculate_points((double)width_x, (double)height_y, 2000, Point.of(0,0));
+        graph.calculate_points((double)width_x, (double)height_y, 1000, Point.of(0,0));
         Point[] arr_pts = graph.get_points();
         java.awt.Point[] arr_awt_pts = new java.awt.Point[arr_pts.length];
 
@@ -74,4 +132,11 @@ public class GraphRegister
         return map_graphs_to_points.values();
     }
 
+
+    public void update_window()
+    {
+        ///TODO updating the window seems to require a scalar update...
+        /// Window should update ass soon as the calculation is finished...
+        Window.get().ifPresent(window -> window.update());
+    }
 }

@@ -1,5 +1,7 @@
 package src.java.automaton.datatree;
 
+import src.java.global.Config;
+
 public class Calculation implements Node
 {
 
@@ -37,10 +39,11 @@ public class Calculation implements Node
     }
 
 
+    @SuppressWarnings("unused")
     @Override
     public double get(double X, boolean log)
     {
-        if (log)
+        if (log && Config.LOG_CALCULATION_STATE)
         {
             System.out.println("requesting value from calculation...: " + a.get(X, false) +", " + b.get(X, false) + ", "+type);
         }

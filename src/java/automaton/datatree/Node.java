@@ -1,8 +1,12 @@
 package src.java.automaton.datatree;
+
+
 public abstract interface Node
 {
 
+
     public double get(double X, boolean log);
+
 
     /**
      * Returns the value contained on this node.
@@ -11,6 +15,7 @@ public abstract interface Node
      * @return result as double
      */
     public double get(double X);
+
 
     /**
      * Cuts all calculations, which do not require the x-parameter.
@@ -21,6 +26,7 @@ public abstract interface Node
      */
     public void cut_reduntant_calculations();
 
+
     /**
      * In the case of a Calculation Instance, this will return true, if X is found anywhere within the tree.
      * In the case of a Value Instance, this will return true, if the value itself is X.
@@ -28,4 +34,6 @@ public abstract interface Node
      * @return boolean
      */
     public boolean contains_X();
+
+
 }

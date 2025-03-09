@@ -8,7 +8,6 @@ import src.java.automaton.datatree.Node;
 public class Graph implements Comparable<Graph>
 {
 
-    private String function;
     private Node top_node;
     private TreeSet<Point> set_points;
     private int ID;
@@ -16,7 +15,6 @@ public class Graph implements Comparable<Graph>
     public Graph(String function, int ID)
     {
         this.ID = ID;
-        this.function = function;
         top_node = CalculationBuilder.build(function);
         set_points = new TreeSet<Point>();
     }
@@ -25,6 +23,13 @@ public class Graph implements Comparable<Graph>
     {
         return ID;
     }
+
+
+    public void set_function(String function)
+    {
+        top_node = CalculationBuilder.build(function);
+    }
+
 
     public void calculate_points(double width, double height, int precision, Point center)
     {
@@ -76,6 +81,7 @@ public class Graph implements Comparable<Graph>
         }
     }
 
+
     public Point[] get_points()
     {
         Point[] arr_points = new Point[set_points.size()];
@@ -87,6 +93,7 @@ public class Graph implements Comparable<Graph>
         }
         return arr_points;
     }
+
 
     @Override
     public int compareTo(Graph graph)
