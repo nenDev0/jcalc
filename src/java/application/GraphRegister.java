@@ -15,7 +15,7 @@ public class GraphRegister
 
     private static final GraphRegister instance_self = new GraphRegister();
 
-    private TreeMap<Graph, java.awt.Point[]> map_graphs_to_points = new TreeMap<Graph, java.awt.Point[]>();
+    private TreeMap<Graph, int[][]> map_graphs_to_points = new TreeMap<Graph, int[][]>();
     private int WIDTH;
     private int HEIGHT;
 
@@ -49,10 +49,10 @@ public class GraphRegister
 
     public void remove_graph(int id)
     {
-        for (Iterator<Entry<Graph, java.awt.Point[]>> entry_it = map_graphs_to_points.entrySet().iterator();
+        for (Iterator<Entry<Graph, int[][]>> entry_it = map_graphs_to_points.entrySet().iterator();
                 entry_it.hasNext();)
         {
-            Entry<Graph, java.awt.Point[]> entry = entry_it.next();
+            Entry<Graph, int[][]> entry = entry_it.next();
             if (entry.getKey().get_ID() == id)
             {
                 entry_it.remove();
@@ -100,7 +100,7 @@ public class GraphRegister
 
     public void calculate_points(int id)
     {
-        for(Entry<Graph, java.awt.Point[]> entry : map_graphs_to_points.entrySet())
+        for(Entry<Graph, int[][]> entry : map_graphs_to_points.entrySet())
         {
             if (entry.getKey().get_ID() == id)
             {
@@ -111,23 +111,24 @@ public class GraphRegister
         update_window();
     }
 
-    private java.awt.Point[] calculate_points(Graph graph)
+    private int[][] calculate_points(Graph graph)
     {
         System.out.println("GraphRegister is calculating...");
         graph.calculate_points((double)width_x, (double)height_y, 1000, Point.of(0,0));
         Point[] arr_pts = graph.get_points();
-        java.awt.Point[] arr_awt_pts = new java.awt.Point[arr_pts.length];
+        int[][] arr_values = new int[2][arr_pts.length];
 
         for (int i = 0; i < arr_pts.length; i++)
         {
             Point p = arr_pts[i];
-            arr_awt_pts[i] = new java.awt.Point((int)(p.get_x()/width_x*WIDTH + WIDTH/2), (int)(-p.get_y()/height_y*HEIGHT + HEIGHT/2));
+            arr_values[0][i] = (int)(p.get_x()/width_x*WIDTH + WIDTH/2);
+            arr_values[1][i] = (int)(-p.get_y()/height_y*HEIGHT + HEIGHT/2);
         }
-        return arr_awt_pts;
+        return arr_values;
     }
 
 
-    public Iterable<java.awt.Point[]> get_values()
+    public Iterable<int[][]> get_values()
     {
         return map_graphs_to_points.values();
     }
