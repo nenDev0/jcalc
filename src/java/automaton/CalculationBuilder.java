@@ -38,7 +38,8 @@ public final class CalculationBuilder
         func = func.replaceAll("\\s","");
         final char[] arr_char = func.toCharArray();
         Node node = build(arr_char, 0,arr_char.length);
-        node.cut_reduntant_calculations();
+        node = node.cut_reduntant_calculations();
+        node = node.align_same_binding_strengths();
         return node;
     }
 
@@ -54,6 +55,7 @@ public final class CalculationBuilder
      * @param chars
      * @param begin
      * @param end
+
      * @return
      *  - Node -> Node is a tree, in which the whole interval is sorted recursively to create an
      *            accurate result, simulating proper mathematics.
@@ -106,6 +108,7 @@ public final class CalculationBuilder
      * @param end
      * @param arr_types
      * @param binding_strength
+     *
      * @return
      *  - Optional.of(Node) -> Node is a tree, in which the whole interval is sorted recursively to
      *                         generate a mathematically accurate result.
@@ -150,7 +153,6 @@ public final class CalculationBuilder
                     return Optional.of(build(chars, begin + 2, end - 1));
                 }
             }
-
         }
         Node a, b;
         ///
@@ -219,12 +221,14 @@ public final class CalculationBuilder
         return Optional.empty();
     }
 
+
     /**
      * Returns the index, at which this bracket closes.
      *
      * @param chars
      * @param begin
      * @param end
+     *
      * @return
      */
     private static int find_end_bracket(final char[] chars, int begin, int end)
@@ -318,6 +322,7 @@ public final class CalculationBuilder
     /**
      *
      * @param c
+     *
      * @return
      */
     private static boolean char_is_decimal_point_divider(char c)
@@ -337,6 +342,7 @@ public final class CalculationBuilder
      * Test, if the char given as parameter is a sign (+/-) symbol.
      *
      * @param c
+     *
      * @return
      * 1 - char is a positive sign '+'
      * -1 - char is a negative sign '-'
@@ -360,6 +366,7 @@ public final class CalculationBuilder
      *
      *
      * @param c
+     *
      * @return
      */
     private static CalculationType read_operator(char c)

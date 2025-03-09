@@ -82,18 +82,19 @@ public class Calculation implements Node
 
 
     @Override
-    public void cut_reduntant_calculations()
+    public Node cut_reduntant_calculations()
     {
+        if (!a.contains_X() && !b.contains_X())
+        {
+            return Value.of(get(0));
+        }
         /// We check for instances of Calculations, because else we would be replacing each Value instance with
         /// a new Value instance, which just creates unnecessary work for the GC.
         if (a instanceof Calculation)
         {
             /// a contains X -> search for possible cuts recursively (DFS) down the tree
-            if (a.contains_X())
-            {
-                a.cut_reduntant_calculations();
-            }
-            else
+            a.cut_reduntant_calculations();
+            if (!a.contains_X())
             {
                 /// a does not contains X -> replace a with Value of a.
                 /// X can be set to anything here
@@ -105,18 +106,15 @@ public class Calculation implements Node
         if (b instanceof Calculation)
         {
             /// b contains X -> search for possible cuts recursively (DFS) down the tree
-            if (b.contains_X())
-            {
-                b.cut_reduntant_calculations();
-            }
-            else
+            b.cut_reduntant_calculations();
+            if (!b.contains_X())
             {
                 /// b does not contains X -> replace b with Value of b.
                 /// X can be set to anything here
                 b = Value.of(b.get(0));
             }
         }
-
+        return this;
     }
 
 
@@ -126,6 +124,76 @@ public class Calculation implements Node
         if (a.contains_X() || b.contains_X())
         {
             return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public Node align_same_binding_strengths()
+    {
+        if (a instanceof Calculation calc)
+        {
+            if (calc.type == type)
+            {
+                return CalculationLayer.of(type)
+                        .add(calc.a)
+                        .add(calc.b)
+                        .add(b)
+                    .align_same_binding_strengths();
+            }
+        }
+        if (b instanceof Calculation calc)
+        {
+            if (calc.type == type)
+            {
+                return CalculationLayer.of(type)
+                        .add(a)
+                        .add(calc.a)
+                        .add(calc.b)
+                    .align_same_binding_strengths();
+            }
+        }
+
+        a = a.align_same_binding_strengths();
+        b = b.align_same_binding_strengths();
+        return this;
+    }
+
+
+    public Node get_a()
+    {
+        return a;
+    }
+
+
+    public Node get_b()
+    {
+        return b;
+    }
+
+
+    public CalculationType get_type()
+    {
+        return type;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return a.toString()+CalculationType.get_char(type)+b.toString();
+    }
+
+    public boolean equals_node(Node node)
+    {
+        if (node instanceof Calculation calc)
+        {
+            if (a.equals(calc.a) && b.equals(calc.b))
+            {
+                return true;
+            }
+            return false;
         }
         return false;
     }

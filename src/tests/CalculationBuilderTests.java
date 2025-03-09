@@ -370,6 +370,7 @@ public class CalculationBuilderTests
 
         //TODO negative sign is calculated with the bracket, before it is squared.
         func = "-(x-25)^2+14";
+        //func = "(-1)*(x-25)^2+14";
         System.out.println("begin testing.:" + func);
         tree = CalculationBuilder.build(func);
         value = tree.get(-3.0);

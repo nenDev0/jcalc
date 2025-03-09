@@ -60,11 +60,53 @@ public class Value implements Node
     @Override
     public boolean contains_X()
     {
-        return X_VALUE.equals(this);
+        /// Has to compare adresses. Since equals() may be shadowed at some point,
+        /// this ensures that won't become a problem.
+        /// value.equals(X_VALUE) => loop => overflow
+        return super.equals(X_VALUE);
     }
 
 
     @Override
-    public void cut_reduntant_calculations() {}
+    public Node cut_reduntant_calculations()
+    {
+        return this;
+    }
+
+
+    @Override
+    public Node align_same_binding_strengths()
+    {
+        return this;
+    }
+
+    @Override
+    public String toString()
+    {
+        return Double.toString(value);
+    }
+
+    @Override
+    public boolean equals_node(Node node)
+    {
+        if (node instanceof Value val)
+        {
+            if (this.contains_X() && val.contains_X())
+            {
+                return true;
+            }
+            else if (this.contains_X() || val.contains_X())
+            {
+                return false;
+            }
+            if (val.value == this.value)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 }
