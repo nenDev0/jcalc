@@ -13,6 +13,7 @@ public class Function
     private Function(String function)
     {
         top_node = CalculationBuilder.build(function);
+        System.out.println("new function created: "+top_node.toString());
     }
 
     public static Function of(String function)

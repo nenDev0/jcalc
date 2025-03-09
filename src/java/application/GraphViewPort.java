@@ -16,23 +16,34 @@ import src.java.global.Config;
 
 public class GraphViewPort extends JPanel
 {
+
     private Point[] x_axis_points;
     private Point[] y_axis_points;
     private JPanel view_port_settings;
 
+
+    /**
+     *
+     *
+     * @param dimension
+     *
+     */
     public GraphViewPort(Dimension dimension)
     {
         this.setBackground(Config.GRAPH_VIEWPORT_COLOR);
         this.setSize(dimension);
         this.setPreferredSize(dimension);
         this.setVisible(true);
+        ///
         int height = (int)getSize().getHeight();
         int width = (int)getSize().getWidth();
+        ///
         this.x_axis_points = new Point[]{new Point(0, (int)height/2), new Point((int)width, (int)height/2)};
         this.y_axis_points = new Point[]{new Point((int)width/2, 0), new Point((int)width/2, (int)height)};
+        ///
         GraphRegister.get().set_dimension(width, height);
         GraphRegister.get().calculate_points();
-
+        ///
         view_port_settings = new JPanel();
         JScrollBar scale = new JScrollBar(JScrollBar.HORIZONTAL, 1,1, 1, 1000);
         scale.setPreferredSize(new Dimension(800, 20));
@@ -45,9 +56,13 @@ public class GraphViewPort extends JPanel
             }
         });
         view_port_settings.add(scale);
-
     }
 
+
+    /**
+     *
+     *
+     */
     public void adjust_axis()
     {
         //TODO add ability to adjust center point
@@ -65,6 +80,12 @@ public class GraphViewPort extends JPanel
     }
 
 
+    /**
+     *
+     *
+     * @param g
+     *
+     */
     public void paint_graphs(Graphics g)
     {
         for (int[][] arr_values : GraphRegister.get().get_values())
@@ -74,6 +95,11 @@ public class GraphViewPort extends JPanel
     }
 
 
+    /**
+     *
+     *
+     * @return
+     */
     public JPanel get_settings()
     {
         return view_port_settings;

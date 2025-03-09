@@ -9,9 +9,9 @@ import java.util.Optional;
 
 import src.java.functions.Graph;
 
+
 public class GraphRegister
 {
-
 
     private static final GraphRegister instance_self = new GraphRegister();
 
@@ -25,35 +25,59 @@ public class GraphRegister
     private GraphRegister() {}
 
 
+    /**
+     *
+     *
+     * @return
+     */
     public static GraphRegister get()
     {
         return instance_self;
     }
 
 
+    /**
+     *
+     *
+     * @param graph
+     *
+     */
     public void register_graph(Graph graph)
     {
         map_graphs_to_points.put(graph, calculate_points(graph));
-        System.out.println("added new graph:" + graph.get_ID());
+        System.out.println("added new graph:" + graph.ID);
     }
 
 
+    /**
+     *
+     *
+     * @param function
+     * @param id
+     *
+     */
     public void register_graph(String function, int id)
     {
         Graph graph = new Graph(function, id);
         map_graphs_to_points.put(graph, calculate_points(graph));
-        System.out.println("added new graph:" + graph.get_ID());
+        System.out.println("added new graph:" + graph.ID);
         update_window();
     }
 
 
+    /**
+     *
+     *
+     * @param id
+     *
+     */
     public void remove_graph(int id)
     {
         for (Iterator<Entry<Graph, int[][]>> entry_it = map_graphs_to_points.entrySet().iterator();
                 entry_it.hasNext();)
         {
             Entry<Graph, int[][]> entry = entry_it.next();
-            if (entry.getKey().get_ID() == id)
+            if (entry.getKey().ID == id)
             {
                 entry_it.remove();
                 break;
@@ -61,11 +85,19 @@ public class GraphRegister
         }
     }
 
+
+    /**
+     *
+     *
+     * @param id
+     *
+     * @return
+     */
     public Optional<Graph> get_graph(int id)
     {
         for (Graph graph : map_graphs_to_points.keySet())
         {
-            if (graph.get_ID() == id)
+            if (graph.ID == id)
             {
                 return Optional.of(graph);
             }
@@ -74,6 +106,12 @@ public class GraphRegister
     }
 
 
+    /**
+     *
+     * @param width
+     * @param height
+     *
+     */
     public void set_dimension(int width, int height)
     {
         this.WIDTH = width;
@@ -82,6 +120,13 @@ public class GraphRegister
         calculate_points();
     }
 
+
+    /**
+     *
+     *
+     * @param scale
+     *
+     */
     public void set_scale(int scale)
     {
         this.width_x = WIDTH * scale / 100;
@@ -89,6 +134,11 @@ public class GraphRegister
         calculate_points();
     }
 
+
+    /**
+     *
+     *
+     */
     public void calculate_points()
     {
         for (Graph graph : map_graphs_to_points.keySet())
@@ -98,11 +148,18 @@ public class GraphRegister
         update_window();
     }
 
+
+    /**
+     *
+     *
+     * @param id
+     *
+     */
     public void calculate_points(int id)
     {
         for(Entry<Graph, int[][]> entry : map_graphs_to_points.entrySet())
         {
-            if (entry.getKey().get_ID() == id)
+            if (entry.getKey().ID == id)
             {
                 entry.setValue(calculate_points(entry.getKey()));
                 break;
@@ -111,13 +168,20 @@ public class GraphRegister
         update_window();
     }
 
+
+    /**
+     *
+     *
+     * @param graph
+     *
+     * @return
+     */
     private int[][] calculate_points(Graph graph)
     {
         System.out.println("GraphRegister is calculating...");
         graph.calculate_points((double)width_x, (double)height_y, 1000, Point.of(0,0));
         Point[] arr_pts = graph.get_points();
         int[][] arr_values = new int[2][arr_pts.length];
-
         for (int i = 0; i < arr_pts.length; i++)
         {
             Point p = arr_pts[i];
@@ -128,12 +192,21 @@ public class GraphRegister
     }
 
 
+    /**
+     *
+     *
+     * @return
+     */
     public Iterable<int[][]> get_values()
     {
         return map_graphs_to_points.values();
     }
 
 
+    /**
+     *
+     *
+     */
     public void update_window()
     {
         ///TODO updating the window seems to require a scalar update...

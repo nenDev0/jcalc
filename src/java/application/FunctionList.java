@@ -23,6 +23,7 @@ public final class FunctionList
     private LinkedList<FunctionListElement> ll_functions;
     private final static FunctionList self_instance = new FunctionList();
 
+
     private FunctionList()
     {
         panel = new JPanel();

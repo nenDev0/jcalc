@@ -13,9 +13,11 @@ import src.java.global.Config;
 
 public class Window extends JFrame
 {
+
     private Container pane;
     private GraphViewPort GVP;
     private static final Window self_instance = new Window();
+
 
     public static Optional<Window> get()
     {
@@ -26,28 +28,29 @@ public class Window extends JFrame
         return Optional.of(self_instance);
     }
 
+
     private Window()
     {
         Dimension dimension = new Dimension(1680, 720);
         this.pane = getContentPane();
-
+        ///
         setSize(dimension);
         setTitle("Graphical Calculator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-
+        ///
+        ///
         pane.setBackground(Config.BACKGROUND_COLOR);
         pane.setLayout(new FlowLayout());
-
+        ///
         GVP = new GraphViewPort(dimension);
         GVP.setSize(dimension);
         pane.add(GVP);
-
+        ///
         FunctionList function_array = FunctionList.get();
         pane.add(function_array.get_panel());
         pane.add(GVP.get_settings());
-
     }
+
 
     /**
      * This was my attempt to update everything within the window,
@@ -69,14 +72,13 @@ public class Window extends JFrame
     {
         EventQueue.invokeLater(new Runnable()
         {
-
             @Override
             public void run()
             {
                 self_instance.setVisible(true);
             }
         });
-
     }
+
 
 }

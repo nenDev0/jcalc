@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import src.java.functions.Graph;
 import src.java.global.Config;
 
+
 public class FunctionListElement
 {
 

@@ -9,18 +9,15 @@ public class Graph implements Comparable<Graph>
 
     private Function function;
     private TreeSet<Point> set_points;
-    private int ID;
+    ///
+    /// final unique graph identifier
+    public final int ID;
 
     public Graph(String function, int ID)
     {
         this.ID = ID;
         set_function(function);
         set_points = new TreeSet<Point>();
-    }
-
-    public int get_ID()
-    {
-        return ID;
     }
 
 
@@ -98,11 +95,11 @@ public class Graph implements Comparable<Graph>
     @Override
     public int compareTo(Graph graph)
     {
-        if (ID > graph.get_ID())
+        if (ID > graph.ID)
         {
             return 1;
         }
-        if (ID < graph.get_ID())
+        if (ID < graph.ID)
         {
             return -1;
         }
