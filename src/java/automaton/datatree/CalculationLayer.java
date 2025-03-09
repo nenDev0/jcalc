@@ -137,7 +137,6 @@ public class CalculationLayer implements Node
     }
 
 
-    //TODO it should cut Values, like Value.of(0) in addition or Value.of(1) in Multiplication
     @Override
     public Node cut_reduntant_calculations()
     {
@@ -148,7 +147,7 @@ public class CalculationLayer implements Node
         while(iterator.hasNext())
         {
             Node node = iterator.next();
-            if (node instanceof CalculationLayer)
+            if (node instanceof CalculationLayer || node instanceof Calculation)
             {
                 /// search for possible cuts recursively (DFS) down the tree
                 node = node.cut_reduntant_calculations();
@@ -166,6 +165,11 @@ public class CalculationLayer implements Node
         if (ll_nodes.size() == 0)
         {
             return value;
+        }
+        /// if the nodes add up to the neutral value of the layer, the value is dismissed
+        if (value.get(0) == Value.get_neutral(this.type).get(0))
+        {
+            return this;
         }
         return this.add(value);
     }
@@ -195,7 +199,6 @@ public class CalculationLayer implements Node
         }
         ll_nodes.clear();
         ll_nodes.addAll(ll_nodes_new);
-
         Iterator<Node> iterator = ll_nodes.iterator();
         while(iterator.hasNext())
         {
@@ -260,10 +263,34 @@ public class CalculationLayer implements Node
 
 
     @Override
+    public Node inverse(CalculationType type)
+    {
+        Node node;
+        switch (type) {
+            case ADDITION, SUBTRACTION ->
+            {
+                node = Calculation.of(Value.of(-1), this, CalculationType.MULTIPLICATION);
+                break;
+            }
+            case MULTIPLICATION, DIVISION ->
+            {
+                node = Calculation.of(Value.of(1), this, CalculationType.DIVISION);
+                break;
+            }
+            /// not entirely sure, if it is necessary?
+            /// case Power too complicated for now
+            default -> {
+                throw new AssertionError();
+            }
+        }
+        return node;
+    }
+
+
+    @Override
     public String toString()
     {
         String s = "";
-
         Iterator<Node> iterator = ll_nodes.iterator();
         while(iterator.hasNext())
         {
@@ -272,7 +299,6 @@ public class CalculationLayer implements Node
             if (iterator.hasNext())
             {
                 s = s + CalculationType.get_char(type);
-
             }
         }
         return s;

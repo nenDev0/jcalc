@@ -5,6 +5,14 @@ public abstract interface Node
 {
 
 
+    /**
+     *
+     *
+     * @param X
+     * @param log
+     *
+     * @return
+     */
     public double get(double X, boolean log);
 
 
@@ -50,6 +58,25 @@ public abstract interface Node
     public boolean contains_X();
 
 
+    /**
+     * Returns the inverse of the given value.
+     *
+     * @param X
+     * @param type
+     *
+     * @return
+     */
+    public Node inverse(CalculationType type);
+
+
+    /**
+     *
+     *
+     * @param node
+     *
+     * @return
+     */
     public boolean equals_node(Node node);
+
 
 }

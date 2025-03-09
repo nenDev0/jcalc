@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import src.java.automaton.datatree.CalculationType;
 import src.java.automaton.datatree.Value;
 
 public class ValueTests {
@@ -31,7 +32,29 @@ public class ValueTests {
         assertTrue(v.get(3) == 200);
         assertTrue(v.get(-3) == 200);
         assertTrue(v.get(200) == 200);
+    }
 
 
+    @Test
+    public void inverse()
+    {
+        double vv = 12.3;
+        Value v = Value.of(vv);
+        assertTrue(v.inverse(CalculationType.ADDITION).get(0) == -vv);
+        assertTrue(v.inverse(CalculationType.SUBTRACTION).get(0) == -vv);
+        assertTrue(v.inverse(CalculationType.MULTIPLICATION).get(0) == 1/vv);
+        assertTrue(v.inverse(CalculationType.DIVISION).get(0) == 1/vv);
+    }
+
+
+    @Test
+    public void inverse_x()
+    {
+        double xv = 46.04512;
+        Value x = Value.X_VALUE;
+        assertTrue(x.inverse(CalculationType.ADDITION).get(xv) == -xv);
+        assertTrue(x.inverse(CalculationType.SUBTRACTION).get(xv) == -xv);
+        assertTrue(x.inverse(CalculationType.MULTIPLICATION).get(xv) == 1/xv);
+        assertTrue(x.inverse(CalculationType.DIVISION).get(xv) == 1/xv);
     }
 }

@@ -185,6 +185,7 @@ public class Calculation implements Node
         return a.toString()+CalculationType.get_char(type)+b.toString();
     }
 
+
     public boolean equals_node(Node node)
     {
         if (node instanceof Calculation calc)
@@ -196,6 +197,34 @@ public class Calculation implements Node
             return false;
         }
         return false;
+    }
+
+
+    @Override
+    public Node inverse(CalculationType type)
+    {
+        Node node;
+        switch (type) {
+            case ADDITION, SUBTRACTION ->
+            {
+                node = Calculation.of(this, Value.of(-1), CalculationType.MULTIPLICATION);
+                break;
+            }
+            case MULTIPLICATION, DIVISION ->
+            {
+                node = Calculation.of(Value.of(1), this, CalculationType.DIVISION);
+                break;
+            }
+            case POWER ->
+            {
+                node = Calculation.of(a, b.inverse(CalculationType.MULTIPLICATION), CalculationType.POWER);
+                break;
+            }
+            default -> {
+                throw new AssertionError();
+            }
+        }
+        return node;
     }
 
 
