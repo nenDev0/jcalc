@@ -1,4 +1,4 @@
-package src.tests;
+package src.tests.automaton.datatree;
 
 import static org.junit.Assert.assertTrue;
 
@@ -102,6 +102,25 @@ public class CalculationLayerTests
         assertTrue(expect.equals_node(c));
     }
 
+    //TODO this seems to not function entirely as expected.
+    @Test
+    public void cut_redundant_nodes_x()
+    {
+        CalculationType type = CalculationType.ADDITION;
+        change_values(13.3304, 4575.4293, 13.0);
+        c = CalculationLayer.of(type).add(Calculation.of(a, Value.X_VALUE, type)).add(b);
+        c = c.cut_reduntant_calculations();
+        c = c.align_same_binding_strengths();
+        c = c.cut_reduntant_calculations();
+        Node expect = CalculationLayer.of(type).add(Value.X_VALUE).add(Value.of(av+bv));
+        assertTrue(c.get(xv) == expect.get(xv));
+        assertTrue(c.get(252.033) == expect.get(252.033));
+        assertTrue(c.get(252.033) != expect.get(252.0331));
+        System.out.println(c);
+        System.out.println(expect);
+        assertTrue(c.equals_node(expect));
+        assertTrue(expect.equals_node(c));
+    }
 
     @Test
     public void inverse()

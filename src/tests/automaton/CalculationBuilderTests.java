@@ -1,4 +1,4 @@
-package src.tests;
+package src.tests.automaton;
 
 
 import src.java.automaton.CalculationBuilder;

@@ -1,4 +1,4 @@
-package src.tests;
+package src.tests.automaton.datatree;
 
 
 import src.java.automaton.datatree.Calculation;
@@ -224,8 +224,28 @@ public class CalculationTests
     @Test
     public void cut_redundant_nodes()
     {
-        ///TODO this requires some sort of accessibility functionality
+        change_values(av, bv, xv);
+        c = Calculation.of(a, b, CalculationType.ADDITION);
+        c = c.cut_reduntant_calculations();
+        Node expect = Value.of(av+bv);
+        assertTrue(c.get(12.0) == expect.get(1313.0));
+        assertTrue(c.equals_node(expect));
+        assertTrue(expect.equals_node(c));
     }
 
+
+    @Test
+    public void inverse()
+    {
+        change_values(13.0, 12.0, 123.3);
+        c = Calculation.of(a, b, CalculationType.ADDITION);
+        assertTrue(c.get(55) * c.inverse(CalculationType.MULTIPLICATION).get(12) == 1.0);
+        c = Calculation.of(a, b, CalculationType.MULTIPLICATION);
+        assertTrue(c.get(55) * c.inverse(CalculationType.MULTIPLICATION).get(12) == 1.0);
+        c = Calculation.of(a, b, CalculationType.ADDITION);
+        assertTrue(c.get(55) + c.inverse(CalculationType.ADDITION).get(12) == 0.0);
+        c = Calculation.of(a, b, CalculationType.MULTIPLICATION);
+        assertTrue(c.get(55) + c.inverse(CalculationType.ADDITION).get(12) == 0.0);
+    }
 
 }

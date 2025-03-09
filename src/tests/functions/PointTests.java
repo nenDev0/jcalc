@@ -1,4 +1,4 @@
-package src.tests;
+package src.tests.functions;
 
 
 import static org.junit.Assert.assertThrows;
